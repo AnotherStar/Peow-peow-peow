@@ -1,12 +1,12 @@
 export const fireEmitter = {
 	lifetime: {
 		min: 0.1,
-		max: 0.5,
+		max: 0.25,
 	},
-	frequency: 1 / 1000,
+	frequency: 1 / 500,
 	emitterLifetime: 0,
 	maxParticles: 1000,
-	addAtBack: true,
+	addAtBack: false,
 	pos: {
 		x: 0,
 		y: 0,
@@ -19,7 +19,7 @@ export const fireEmitter = {
 					list: [
 						{
 							time: 0,
-							value: 0.62,
+							value: 1,
 						},
 						{
 							time: 1,
@@ -32,8 +32,8 @@ export const fireEmitter = {
 		{
 			type: 'moveSpeedStatic',
 			config: {
-				min: 500 / 5,
-				max: 500 / 5,
+				min: 50,
+				max: 50,
 			},
 		},
 		{
@@ -43,7 +43,7 @@ export const fireEmitter = {
 					list: [
 						{
 							time: 0,
-							value: 0.25 / 5,
+							value: 0.05 / 5,
 						},
 						{
 							time: 1,
@@ -94,7 +94,7 @@ export const fireEmitter = {
 				data: {
 					x: 0,
 					y: 0,
-					radius: 5,
+					radius: 3,
 					innerRadius: 0,
 					affectRotation: false,
 				},

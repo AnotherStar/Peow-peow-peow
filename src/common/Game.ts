@@ -60,6 +60,8 @@ export class Game {
 
 		user.spawn();
 
+		user.controller.y = 0.1;
+		user.controller.x = randomBetween(-0.3, 0.3, false);
 		user.controller.primary = 1;
 
 		this.users.push(user);
@@ -67,8 +69,8 @@ export class Game {
 
 	getSpawnPosition(user: User) {
 		const position = {
-			x: randomBetween(10, 50),
-			y: randomBetween(10, 50),
+			x: randomBetween(10, window.innerWidth / 10 - 10),
+			y: randomBetween(10, window.innerHeight / 10 - 10),
 		};
 
 		const angle = randomBetween(0, 2 * Math.PI);

@@ -34,7 +34,7 @@ export class ShipAlpha extends Ship {
 				max: 100,
 			},
 			motor: {
-				power: 0.1,
+				power: 0.05,
 				getControl: () => this.user.controller.y,
 			},
 			rubber: {
@@ -50,18 +50,35 @@ export class ShipAlpha extends Ship {
 			user: this.user,
 		} as BodyUserData);
 
-		const shape = new PolygonShape();
+		const shapeL = new PolygonShape();
 
-		shape.Set([
+		shapeL.Set([
 			//
 			new Vec2(-1, 0),
-			new Vec2(0, 2.5),
-			new Vec2(1, 0),
-			new Vec2(0, -0.5),
+			new Vec2(-0.3, 2.5),
+			// new Vec2(1, 0),
+			new Vec2(-0.3, -0.5),
 		]);
 
 		body.CreateFixture({
-			shape,
+			shape: shapeL,
+			density: 0.7,
+			restitution: 0.7,
+			friction: 0.7,
+		});
+
+		const shapeR = new PolygonShape();
+
+		shapeR.Set([
+			//
+			// new Vec2(-1, 0),
+			new Vec2(0.3, 2.5),
+			new Vec2(1, 0),
+			new Vec2(0.3, -0.5),
+		]);
+
+		body.CreateFixture({
+			shape: shapeR,
 			density: 0.7,
 			restitution: 0.7,
 			friction: 0.7,

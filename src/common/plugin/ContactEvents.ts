@@ -3,7 +3,6 @@ import { ContactListener, World, Body } from '@flyover/box2d';
 declare module '@flyover/box2d' {
 	interface World {
 		AddContactsEvents(this: World): void;
-		DestroyBody(this: World, body: Body): void;
 	}
 }
 

@@ -1,6 +1,7 @@
 import { Body, PolygonShape, Vec2, World, XY } from '@flyover/box2d';
 import { BodyUserData } from './plugin/UserData';
 import { User } from './User';
+import { between } from './utils';
 
 export abstract class Rocket {
 	body: Body;
@@ -23,8 +24,8 @@ export class RocketAlpha extends Rocket {
 			type: 2,
 			position: new Vec2(position.x, position.y),
 			angle,
-			linearDamping: 0.001,
-			angularDamping: 0.1,
+			linearDamping: 0.005,
+			angularDamping: 0.05,
 			allowSleep: false,
 			bullet: true,
 		});
@@ -35,17 +36,16 @@ export class RocketAlpha extends Rocket {
 				max: 10,
 			},
 			motor: {
-				power: 0.002,
+				power: 0.01,
 				getControl: () => this.getControl().y,
 			},
 			rubber: {
-				power: 0.005,
+				power: 0.002,
 				getControl: () => this.getControl().x,
 			},
-			sideFriction: 0.001,
+			// sideFriction: 0.001,
 			color: this.user?.color | 0xfff000,
-			lifetime: 60000,
-			damage: 100,
+			lifetime: 10000,
 		} as BodyUserData);
 
 		const shape = new PolygonShape();
@@ -66,6 +66,10 @@ export class RocketAlpha extends Rocket {
 			friction: 0.7,
 		});
 
+		setTimeout(() => {
+			body.GetUserData().damage = 100;
+		}, 100);
+
 		return body;
 	}
 
@@ -78,8 +82,8 @@ export class RocketAlpha extends Rocket {
 			};
 		}
 
-		// if (this.target && !this.target.IsEnabled) this.target = null;
 		if (!this.target) this.target = this.findTarget();
+		if (this.target && this.target.GetUserData().lifetime === 0) this.target = null;
 
 		if (!this.target) {
 			return {
@@ -90,10 +94,15 @@ export class RocketAlpha extends Rocket {
 
 		const deltaAngle = this.body.getAngleToBody(this.target);
 
-		return {
+		const controls = {
 			x: deltaAngle > 0.01 ? 1 : deltaAngle < -0.01 ? -1 : 0,
-			y: 1,
+			y: between(10000, 0, userData.lifetime, 0.75, 1, true),
 		};
+
+		if (userData.lifetime > 9900) controls.x = 0;
+		if (userData.lifetime > 9500) controls.y = 0;
+
+		return controls;
 	}
 
 	findTarget(): Body | null {

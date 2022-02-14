@@ -2,8 +2,9 @@ import { World, Body, Fixture, Shape, CircleShape, PolygonShape, branch } from '
 import * as PIXI from 'pixi.js';
 import { Emitter, Particle } from '@pixi/particle-emitter';
 import { fireEmitter } from './particles';
+import { between } from '../utils';
 
-const LINE_WIDTH = 0.5;
+const LINE_WIDTH = 1.5;
 const SCALE = 10;
 
 declare module 'pixi.js' {
@@ -91,10 +92,18 @@ World.prototype.RenderBody = function (this: World, body: Body, delta: number): 
 
 		const behaivor = userData.motor.emitter.getBehavior('moveSpeedStatic');
 
-		if (behaivor) {
-			behaivor.min = 0;
-			behaivor.max = userData.motor.getControl() * 100;
-		}
+		// if (behaivor) {
+		// 	behaivor.min = 0;
+		// 	behaivor.max = userData.motor.getControl() * 100;
+		// }
+
+		userData.motor.emitter.spawnChance = between(0, 1, userData.motor.getControl(), 0, 1);
+		// userData.motor.emitter.frequency = between(0, 1, userData.motor.getControl(), 1, 1 / 500);
+
+		// console.log(userData.motor.emitter.frequency);
+
+		// between(0, userData.motor.getControl(), 1, 1 / 300, 1 / 1000);
+		// console.log());
 
 		userData.motor.emitter.update(delta / 1000);
 	}

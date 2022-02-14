@@ -1,4 +1,5 @@
 import { Body, CircleShape, Vec2 } from '@flyover/box2d';
+import { Rocket } from '../Rocket';
 
 import { BodyUserData } from './UserData';
 
@@ -12,7 +13,7 @@ Body.prototype.update = function (this: Body, delta: number) {
 	const userData = this.GetUserData();
 
 	if (userData.lifetime === 0 || (userData.health && userData.health.current === 0)) {
-		this.GetWorld().DestroyBody(this);
+		return this.GetWorld().DestroyBody(this);
 	}
 
 	if (userData.motor) {
@@ -40,9 +41,14 @@ Body.prototype.update = function (this: Body, delta: number) {
 				const bullet = new userData.launcher.constructor(
 					this.GetWorld(),
 					user,
-					this.GetWorldPoint({ x: 1.5, y: 0 }, { x: 0, y: 0 }),
+					this.GetWorldPoint({ x: 0, y: 0 }, { x: 0, y: 0 }),
 					this.GetAngle(),
-				);
+				) as Rocket;
+
+				const bodyVelocity = this.GetLinearVelocity();
+				const bodyDirection = this.GetWorldVector(new Vec2(0, 1), new Vec2(0, 1)).SelfMul(0.75);
+
+				bullet.body.SetLinearVelocity(bodyDirection.SelfAdd(bodyVelocity));
 				userData.launcher.reloadingTime = userData.launcher.reloadingTimeMax;
 			} catch (error) {
 				console.error(error);
